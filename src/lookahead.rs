@@ -8,3 +8,9 @@ pub trait LookaheadIterator : Iterator
     /// mutable self.
     fn has_next(&mut self) -> bool;
 }
+
+impl<T> LookaheadIterator for T where T : ExactSizeIterator {
+    fn has_next(&mut self) -> bool {
+        self.len() > 0
+    }
+}
