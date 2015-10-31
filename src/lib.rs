@@ -90,6 +90,8 @@ mod groupbylazy;
 mod intersperse;
 mod islice;
 mod linspace;
+mod lookahead;
+pub use lookahead::LookaheadIterator;
 pub mod misc;
 mod pad_tail;
 mod rciter;
