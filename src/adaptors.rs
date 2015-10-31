@@ -16,6 +16,7 @@ use std::hash::Hash;
 use Itertools;
 use size_hint;
 use misc::MendSlice;
+use lookahead::LookaheadIterator;
 
 macro_rules! clone_fields {
     ($name:ident, $base:expr, $($field:ident),+) => (
@@ -200,6 +201,19 @@ impl<I> Iterator for PutBack<I> where
     fn size_hint(&self) -> (usize, Option<usize>) {
         // Not ExactSizeIterator because size may be larger than usize
         size_hint::add_scalar(self.iter.size_hint(), self.top.is_some() as usize)
+    }
+}
+
+impl<I> LookaheadIterator for PutBack<I> where
+    I: Iterator,
+{
+    #[inline]
+    fn has_next(&mut self) -> bool {
+        if self.top.is_none() {
+            self.top = self.iter.next();
+        }
+
+        self.top.is_some()
     }
 }
 

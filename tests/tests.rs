@@ -10,6 +10,7 @@ extern crate permutohedron;
 use it::Itertools;
 use it::Interleave;
 use it::Zip;
+use it::LookaheadIterator;
 
 #[test]
 fn product2() {
@@ -267,6 +268,19 @@ fn put_back() {
     pb.put_back(1);
     pb.put_back(0);
     it::assert_equal(pb, xs.iter().cloned());
+}
+
+#[test]
+fn put_back_lookahead() {
+    let mut pb = it::PutBack::new(vec![17, 19, 23].into_iter().filter(|&v| v < 20));
+    assert!(pb.has_next());
+    assert_eq!(Some(17), pb.next());
+    pb.put_back(29);
+    assert!(pb.has_next());
+    assert_eq!(Some(29), pb.next());
+    assert_eq!(Some(19), pb.next());
+    assert!(!pb.has_next());
+    assert_eq!(None, pb.next());
 }
 
 #[test]
